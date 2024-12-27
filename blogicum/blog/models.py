@@ -1,24 +1,9 @@
-from django.conf import settings
-from django.contrib.auth import get_user_model
 from django.db import models
+from django.contrib.auth import get_user_model
 
+from core.models import PublishedModel
 
 User = get_user_model()
-
-
-class PublishedModel(models.Model):
-    is_published = models.BooleanField(
-        default=True,
-        verbose_name='Опубликовано',
-        help_text='Снимите галочку, чтобы скрыть публикацию.'
-    )
-    created_at = models.DateTimeField(
-        auto_now_add=True,
-        verbose_name='Добавлено'
-    )
-
-    class Meta:
-        abstract = True
 
 
 class Location(PublishedModel):
@@ -34,7 +19,8 @@ class Location(PublishedModel):
         verbose_name_plural = 'Местоположения'
 
     def __str__(self) -> str:
-        return self.name[:settings.REPRESENTATION_LENGTH]
+        name = str(self.name)
+        return name[:20]
 
 
 class Category(PublishedModel):
@@ -49,10 +35,8 @@ class Category(PublishedModel):
         max_length=64,
         unique=True,
         verbose_name='Идентификатор',
-        help_text=(
-            'Идентификатор страницы для URL; '
-            'разрешены символы латиницы, цифры, дефис и подчёркивание.'
-        )
+        help_text='Идентификатор страницы для URL; '
+                  'разрешены символы латиницы, цифры, дефис и подчёркивание.'
     )
 
     class Meta:
@@ -60,7 +44,8 @@ class Category(PublishedModel):
         verbose_name_plural = 'Категории'
 
     def __str__(self) -> str:
-        return self.title[:settings.REPRESENTATION_LENGTH]
+        title = str(self.title)
+        return title[:20]
 
 
 class Post(PublishedModel):
@@ -109,7 +94,8 @@ class Post(PublishedModel):
         verbose_name_plural = 'Публикации'
 
     def __str__(self) -> str:
-        return self.title[:settings.REPRESENTATION_LENGTH]
+        title = str(self.title)
+        return title[:20]
 
 
 class Comment(PublishedModel):
@@ -139,4 +125,5 @@ class Comment(PublishedModel):
         ordering = ('created_at',)
 
     def __str__(self) -> str:
-        return self.text[:settings.REPRESENTATION_LENGTH]
+        text = str(self.text)
+        return text[:20]
